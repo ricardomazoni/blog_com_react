@@ -4,25 +4,40 @@ import React, { Component } from 'react'
  * reduxForm - comunica com Store
  */
 import { Field, reduxForm } from 'redux-form'
+import {Link} from 'react-router-dom'
+import { connect } from 'react-redux'
+import { createPost } from '../actions'
 
 class PostsNew extends Component {
 
     renderField(field) {
+        const { meta: { touched, error } } = field
+        // const className = `form-group ${field.meta.touched && field.meta.error ? 'has-danger': ''}`
+        const className = `form-group ${touched && error ? 'has-danger': ''}`
         return (
-            <div className='form-group'>
+            <div className={className}>
                 <label>{field.label}</label>
                 <input
                     className='form-control'
                     type='text'
                     {...field.input}
-                />
-                <div className="form-error">{field.meta.error}</div>                
+                                                />
+                {/* <div className="form-error">{field.meta.error}</div>                 */}
+                <div className='text-help'>
+                    {touched ? error : ''}
+                </div>    
+                
             </div>
         )
     }
 
     onSubmit(values) {
-        console.log(values)
+        /**
+         * redirecionando para tela inicial
+         */
+        this.props.history.push('/')
+        this.props.createPost(values)
+        // console.log(values)
     }
 
     render() {
@@ -45,6 +60,7 @@ class PostsNew extends Component {
                     component={this.renderField}
                 />
                 <button type='submit' className='btn btn-primary'>Submit</button>
+                <Link to='/' className='btn btn-danger'>Calcel</Link>
             </form>    
         )
     }
@@ -71,4 +87,6 @@ function validate(values) {
 export default reduxForm({
     validate,
     form: 'PostsNewForm'
-})(PostsNew)
+})(
+    connect(null, {createPost})(PostsNew)
+)
