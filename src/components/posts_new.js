@@ -35,8 +35,10 @@ class PostsNew extends Component {
         /**
          * redirecionando para tela inicial
          */
-        this.props.history.push('/')
-        this.props.createPost(values)
+        // this.props.history.push('/')
+        this.props.createPost(values, () => {
+            this.props.history.push('/')
+        })
         // console.log(values)
     }
 
@@ -86,7 +88,7 @@ function validate(values) {
 
 export default reduxForm({
     validate,
-    form: 'PostsNewForm'
+    form: 'PostsNewForm' //aqui não esta passsando para o novo form e identificando que essa exportação refere-se a um ID
 })(
     connect(null, {createPost})(PostsNew)
 )
